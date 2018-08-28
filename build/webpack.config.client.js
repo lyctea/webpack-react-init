@@ -15,6 +15,14 @@ const config = {
   module: {
     rules: [
       {
+        enforce: 'pre', //在代码编译之前执行loader，报错则不继续编译
+        test: /.(js|jsx)$/,
+        loader: 'eslint-loader',
+        exclude: [
+          path.resolve(__dirname, '../node_modules')
+        ]
+      },
+      {
         test: /.jsx$/,
         loader: 'babel-loader'
       },
