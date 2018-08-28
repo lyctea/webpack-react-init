@@ -1,45 +1,22 @@
 const path = require('path')
 const HTMLPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
+const webpackMerge = require('webpack-merge')
+const baseConfig = require('./webpack.base')
 const isDev = process.env.NODE_ENV = 'development'
 
-const config = {
+const config = webpackMerge(baseConfig, {
   entry: {
     app: path.join(__dirname, '../client/app.js')
   },
   output: {
     filename: '[name].[hash].js',
-    path: path.join(__dirname, '../dist'),
-    publicPath: '/public/'       // 在生成的 script 标签中增加的前缀，可以直接静态文件增加 CDN 前缀
-  },
-  module: {
-    rules: [
-      {
-        enforce: 'pre', //在代码编译之前执行loader，报错则不继续编译
-        test: /.(js|jsx)$/,
-        loader: 'eslint-loader',
-        exclude: [
-          path.resolve(__dirname, '../node_modules')
-        ]
-      },
-      {
-        test: /.jsx$/,
-        loader: 'babel-loader'
-      },
-      {
-        test: /.js$/,
-        loader: 'babel-loader',
-        exclude: [
-          path.join(__dirname, '../node_modules')
-        ]
-      }
-    ]
   },
   plugins: [
     new HTMLPlugin({
       template: path.join(__dirname, '../client/template.html')
-    })  ]
-}
+    })]
+})
 
 // 判断是开发环境，增加 devserver 配置
 if(isDev) {
