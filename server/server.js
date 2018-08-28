@@ -1,4 +1,5 @@
 const express = require('express')
+const favicon = require('serve-favicon')
 const ReactSSR = require('react-dom/server')
 const fs = require('fs')
 const path = require('path')
@@ -6,6 +7,8 @@ const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
 const app = express()
+
+app.use(favicon(path.join(__dirname, '../favicon.ico')))
 
 if (!isDev) {
   const serverEntry = require('../dist/server-entry').default
@@ -22,7 +25,7 @@ if (!isDev) {
 }
 
 app.listen(3333, function () {
-  console.log('listen to 3333')
+  console.log('🌂 success! listen to 3333 port!')
 })
 
 
