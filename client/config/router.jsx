@@ -1,12 +1,14 @@
 import React from 'react'
 import {
   Route,
+  Redirect,
 } from 'react-router'
 
 import TopicList from '../views/topic-list/index'
 import TopicDetail from '../views/topic-detail/index'
 
 export default () => [
-  <Route path="/" component={TopicList} exact />,
+  <Route path="/" render={() => <Redirect push to="/list" />} exact />,
+  <Route path="/list" component={TopicList} />,
   <Route path="/detail" component={TopicDetail} />,
 ]
