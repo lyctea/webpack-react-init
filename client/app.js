@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App.jsx'
+import { BrowserRouter } from 'react-router-dom'
+import App from './views/App'
 import { AppContainer } from 'react-hot-loader' // eslint-disable-line
 
 const root = document.getElementById('root');
@@ -10,7 +11,9 @@ const render = (Component) => {
   const renderMethod = !!module.hot ? ReactDOM.render : ReactDOM.hydrate
   renderMethod(
     <AppContainer>
-      <Component />
+      <BrowserRouter>
+        <Component />
+      </BrowserRouter>
     </AppContainer>,
     root,
   )
@@ -19,8 +22,8 @@ const render = (Component) => {
 render(App)
 
 if (module.hot) {
-  module.hot.accept('./App.jsx', () => {
-    const NextApp = require('./App.jsx').default   // eslint-disable-line
+  module.hot.accept('./views/App', () => {
+    const NextApp = require('./views/App').default   // eslint-disable-line
     render(NextApp)
   })
 }
