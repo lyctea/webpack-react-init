@@ -34,14 +34,16 @@ if(isDev) {
     overlay: {
       errors: true
     },
-    publicPath: '/public',  //和 webpack 输出的 path 对应
+    publicPath: '/public', // 和 webpack 输出的 path 对应
     historyApiFallback: {
-      index: '/public/index.html',
+      index: '/public/index.html'
+    },
+    proxy: {
+      '/api': 'http://localhost:3333'
     }
   }
-  
+
   config.plugins.push(new webpack.HotModuleReplacementPlugin())
 }
-
 
 module.exports = config

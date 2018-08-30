@@ -16,7 +16,7 @@ router.post('/login', function (req, res, next) {
           avatarUrl: resp.data.avatar_url
         }
 
-        req.json({
+        res.json({
           success: true,
           data: resp.data
         })
@@ -26,7 +26,7 @@ router.post('/login', function (req, res, next) {
       if (err.response) {
         res.json({
           success: false,
-          data: err.response
+          data: err.response.data
         })
       } else {
         next(err)
