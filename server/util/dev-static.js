@@ -23,25 +23,25 @@ const mfs = new MemoryFs()
 const serverCompiler = webpack(serverConfig)
 
 // 指定 compiler 输出
-serverCompiler.outputFileSystem= mfs
+serverCompiler.outputFileSystem = mfs
 
 let serverBundle
 serverCompiler.watch({}, (err, stats) => {
-  if(err) throw err
-  
+  if (err) throw err
+
   stats = stats.toJson()
   stats.errors.forEach(err => console.log(err))
-  stats.warnings.forEach(err => console.log(warn))
-  
+  stats.warnings.forEach(err => console.log(err))
+
   // 获取服务端打包出来的文件路径
   const bundlePath = path.join(
     serverConfig.output.path,
     serverConfig.output.filename
   )
-  
+
   const bundle = mfs.readFileSync(bundlePath, 'utf-8')
   const m = new Module()
-  
+
   m._compile(bundle, 'server-entry.js')
   serverBundle = m.exports.default
 })
@@ -51,7 +51,7 @@ module.exports = function (app) {
   app.use('/public', proxy({
     target: 'http://localhost:8888'
   }))
-  
+
   app.get('*', function (req, res) {
     getTemplate().then(template => {
       const content = ReactDomServer.renderToString(serverBundle)
@@ -59,7 +59,6 @@ module.exports = function (app) {
     })
   })
 }
-
 
 /*
 * 开发环境服务端渲染的实现原理：

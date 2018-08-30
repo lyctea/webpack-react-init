@@ -20,7 +20,6 @@ class TopicList extends React.Component {
 
   render() {
     const { appState } = this.props
-    console.log(appState)
     return (
       <div>
         <input type="text" onChange={this.changeName} />
@@ -32,7 +31,7 @@ class TopicList extends React.Component {
 
 
 TopicList.propTypes = {
-  appState: PropTypes.instanceOf(AppState).isRequired,
+  appState: PropTypes.instanceOf(AppState),
 }
 
 export default TopicList
