@@ -10,7 +10,7 @@ useStaticRendering(true)
 
 export default (stores, routerContext, url) => (
   <Provider {...stores}>
-    <StaticRouter contenx={routerContext} location={url}>
+    <StaticRouter context={routerContext} location={url}>
       <App />
     </StaticRouter>
   </Provider>
