@@ -15,11 +15,16 @@ const config = webpackMerge(baseConfig, {
   plugins: [
     new HTMLPlugin({
       template: path.join(__dirname, '../client/template.html')
-    })]
+    }),
+    new HTMLPlugin({
+      template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
+      fileName: 'server.ejs'
+    })
+  ]
 })
 
 // 判断是开发环境，增加 devserver 配置
-if(isDev) {
+if (isDev) {
   config.entry = {
     app: [
       'react-hot-loader/patch',

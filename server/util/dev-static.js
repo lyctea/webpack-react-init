@@ -2,6 +2,9 @@ const axios = require('axios')
 const webpack = require('webpack')
 const MemoryFs = require('memory-fs')
 const proxy = require('http-proxy-middleware')
+const serialize = require('serialize-javascript')
+const ejs = require('ejs')
+const asyncBootstrap = require('react-async-bootstrapper').default
 const path = require('path')
 const ReactDomServer = require('react-dom/server')
 
@@ -9,7 +12,7 @@ const serverConfig = require('../../build/webpack.config.server')
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8888/public/index.html')
+    axios.get('http://localhost:8888/public/server.ejs')
       .then(res => {
         resolve(res.data)
       })
@@ -26,6 +29,8 @@ const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs
 
 let serverBundle
+let createStoreMap
+
 serverCompiler.watch({}, (err, stats) => {
   if (err) throw err
 
@@ -44,7 +49,15 @@ serverCompiler.watch({}, (err, stats) => {
 
   m._compile(bundle, 'server-entry.js')
   serverBundle = m.exports.default
+  createStoreMap = m.exports.createStoreMap
 })
+
+const getStoreState = (sotres) => {
+  return Object.keys(sotres).reduce((result, storeName) => {
+    result[storeName] = sotres[storeName].toJson()
+    return result
+  }, {})
+}
 
 module.exports = function (app) {
   // 将 public 目录下的静态文件代理到 8888 端口
@@ -54,8 +67,27 @@ module.exports = function (app) {
 
   app.get('*', function (req, res) {
     getTemplate().then(template => {
-      const content = ReactDomServer.renderToString(serverBundle)
-      res.send(template.replace('<!-- app -->', content))
+      const routerContext = {}
+      const stores = createStoreMap()
+      const app = serverBundle(stores, routerContext, req.url)
+
+      asyncBootstrap(app).then(() => {
+        if (routerContext.url) {
+          res.status(302).setHeader('Location', routerContext.url)
+          res.end()
+          return
+        }
+
+        const state = getStoreState(stores)
+        const content = ReactDomServer.renderToString(app)
+
+        const html = ejs.render(template, {
+          appString: content,
+          initialState: serialize(state)
+        })
+        res.send(html)
+        // res.send(template.replace('<!-- app -->', content))
+      })
     })
   })
 }
