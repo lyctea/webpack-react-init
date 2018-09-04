@@ -83,10 +83,10 @@ module.exports = function (app) {
 
         const html = ejs.render(template, {
           appString: content,
-          initialState: serialize(state)
+          initalState: serialize(state)
         })
+
         res.send(html)
-        // res.send(template.replace('<!-- app -->', content))
       })
     })
   })

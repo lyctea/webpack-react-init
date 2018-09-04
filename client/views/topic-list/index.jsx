@@ -18,15 +18,15 @@ class TopicList extends React.Component {
     appState.changeName(event.target.value)
   }
 
-  // asyncBootstrap() {
-  //   const { appState } = this.props
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       appState.count = 3
-  //       resolve(true)
-  //     }, 1000)
-  //   })
-  // }
+  asyncBootstrap() {
+    const { appState } = this.props
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        appState.count = 3
+        resolve(true)
+      }, 1000)
+    })
+  }
 
   render() {
     const { appState } = this.props

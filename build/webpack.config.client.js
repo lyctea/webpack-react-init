@@ -18,7 +18,7 @@ const config = webpackMerge(baseConfig, {
     }),
     new HTMLPlugin({
       template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
-      fileName: 'server.ejs'
+      filename: 'server.ejs'
     })
   ]
 })
